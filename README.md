@@ -1,4 +1,4 @@
-# CrispyDepression
+# CrispyPaper
 
 Paperback **0.8** source repository.
 
