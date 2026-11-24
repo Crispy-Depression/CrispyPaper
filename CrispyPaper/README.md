@@ -14,7 +14,7 @@ Paperback **0.8** source repository.
 In Paperback 0.8: Settings → External Sources → Add Repository, then paste:
 
 ```
-https://raw.githubusercontent.com/Crispy-Depression/CrispyPaper/CrispyPaper/main
+https://raw.githubusercontent.com/Crispy-Depression/CrispyPaper/main
 ```
 
 Both sources sit behind Cloudflare. If one reports a block, open it in Paperback and run the Cloudflare bypass.
