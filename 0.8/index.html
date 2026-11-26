@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>CrispyDepression (0.8)</title>
+<style>
+  :root { color-scheme: light dark; --bg: #ffffff; --fg: #1c1c1e; --muted: #6b6b70; --line: #e3e3e8; --btn: #0a84ff; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111113; --fg: #f2f2f7; --muted: #98989f; --line: #2c2c30; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  main { max-width: 560px; margin: 0 auto; padding: 40px 20px 64px; }
+  h1 { margin: 0; font-size: 26px; }
+  .sub { margin: 4px 0 24px; color: var(--muted); }
+  .button { display: inline-block; padding: 12px 20px; border-radius: 10px; background: var(--btn); color: #fff; font-weight: 600; text-decoration: none; }
+  h2 { margin: 32px 0 8px; font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  code { display: block; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; word-break: break-all; user-select: all; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  li img { width: 36px; height: 36px; border-radius: 8px; }
+  li small { color: var(--muted); margin-left: 4px; }
+  p { margin: 12px 0 0; }
+  #status { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>CrispyDepression (0.8)</h1>
+  <div class="sub">A Paperback extensions repository</div>
+
+  <a id="add" class="button" href="paperback://addRepo?displayName=CrispyDepression%20(0.8)&amp;url=https%3A%2F%2Fcrispy-depression.github.io%2FCrispyPaper%2F0.8">Add to Paperback</a>
+  <p>On a device with Paperback installed, tap Add to Paperback, or add the base URL below yourself under Settings &gt; External Sources &gt; Add Repository.</p>
+
+  <h2>Base URL</h2>
+  <code id="base">https://crispy-depression.github.io/CrispyPaper/0.8</code>
+
+  <h2>Available sources</h2>
+  <ul id="sources"></ul>
+  <p id="status">Loading sources...</p>
+</main>
+<script>
+  // Everything is worked out from the address this page is served from.
+  var base = location.href.split('#')[0].split('?')[0].replace(/index\.html$/, '').replace(/\/$/, '');
+  var link = 'paperback://addRepo?displayName=' + encodeURIComponent('CrispyDepression (0.8)') + '&url=' + encodeURIComponent(base);
+
+  document.getElementById('base').textContent = base;
+  document.getElementById('add').setAttribute('href', link);
+
+  // The README link ends in #add, which opens Paperback straight away.
+  // If the browser blocks that, the button above still works.
+  if (location.hash === '#add') setTimeout(function () { location.href = link; }, 200);
+
+  fetch(base + '/versioning.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (v) {
+      var list = document.getElementById('sources');
+      (v.sources || []).forEach(function (s) {
+        var li = document.createElement('li');
+        var img = document.createElement('img');
+        img.alt = '';
+        img.src = base + '/' + s.id + '/includes/' + s.icon;
+        var name = document.createElement('span');
+        name.textContent = s.name;
+        var ver = document.createElement('small');
+        ver.textContent = 'v' + s.version;
+        name.appendChild(ver);
+        li.appendChild(img);
+        li.appendChild(name);
+        list.appendChild(li);
+      });
+      document.getElementById('status').textContent = '';
+    })
+    .catch(function (e) {
+      document.getElementById('status').textContent = 'Could not load ' + base + '/versioning.json (' + e.message + ')';
+    });
+</script>
+</body>
+</html>
